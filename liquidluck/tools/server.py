@@ -68,7 +68,7 @@ def _autoindex(abspath):
 
 def _read(abspath):
     filepath = abspath
-    if abspath.endswith('/'):
+    if abspath.endswith(os.sep):
         #: this is index
         filepath = os.path.join(abspath, 'index.html')
         if not os.path.exists(filepath) and PERMALINK == 'slash':
@@ -215,7 +215,7 @@ class LiveReloadHandler(WebSocketHandler):
 
             if g.output_directory == g.source_directory:
                 matches = theme.get('reload_match') or []
-                matches.extend(['.md', '.mkd', '.markdown', '.rst'])
+                matches.extend(['.txt', '.rst'])
                 if ext not in matches:
                     return False
             elif os.path.abspath(g.output_directory) in \

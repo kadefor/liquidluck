@@ -33,10 +33,7 @@ author = {
 #: active readers
 reader = {
     "active": [
-        "liquidluck.readers.markdown.MarkdownReader",
-        # uncomment to active rst reader.
-        # but you need to install docutils by yourself
-        # "liquidluck.readers.restructuredtext.RestructuredTextReader",
+        "liquidluck.readers.restructuredtext.RestructuredTextReader",
     ],
     "vars": {}
 }

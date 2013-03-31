@@ -139,3 +139,97 @@ class Pygments(Directive):
 
 directives.register_directive('sourcecode', Pygments)
 directives.register_directive('code-block', Pygments)
+
+class ShellCast(Directive):
+    """ Embed shellcast in posts.
+
+    NAME is required, with / height are optional integer,
+    and align could be left / center / right.
+
+    Usage:
+    .. shellcast:: NAME
+        :title: name
+        :width: 80
+        :height: 24
+    """
+
+    def align(argument):
+        """Conversion function for the "align" option."""
+        return directives.choice(argument, ('left', 'center', 'right'))
+
+    def shname(argument):
+        return argument
+
+    required_arguments = 1
+    optional_arguments = 2
+    option_spec = {
+        'width': directives.positive_int,
+        'height': directives.positive_int,
+        'title': shname
+    }
+
+    final_argument_whitespace = False
+    has_content = False
+
+    def run(self):
+        videoID = self.arguments[0].strip()
+        width = 80
+        height = 24
+        title = 'bash'
+
+        if 'width' in self.options:
+            width = self.options['width']
+
+        if 'height' in self.options:
+            height = self.options['height']
+
+        if 'title' in self.options:
+            title = self.options['title']
+
+        html_code = """\
+      <div class="sgr embed" id="player" style="width:560px; background-image: none; background-color: ">
+        <div class="header" style="width:560px">
+            <img src='/static/img/buttons.png'>
+            <h1> %s </h1>
+        </div>
+
+        <div id='term' style="line-height: 0;"></div>
+
+        <div class='progress progress-info progress-striped'>
+            <div class='bar'></div>
+        </div>
+
+        <nav class='controls'>
+            <li class='sc-button toggle' data-action='play'>
+                <img src='/static/img/playback-start.png'>
+            </li>
+
+            <li class='sc-label'>
+            Speed:
+            </li>
+
+            <li class='speed-container'>
+                <input class='speed' type='text' value='2.0'>
+            </li>
+        </nav>
+      </div>
+    <script>
+      //<![CDATA[
+        jQuery(function() {
+          window.term = new Terminal(%s, %s, function(data) {
+            console.log("Handler:", data);
+          });
+          window.term.id = 1;
+          term.open(document.getElementById('term'));
+          window.player = new VT.Player(term);
+          window.player.load('%s');
+        })
+      //]]>
+    </script>
+""" % (title, width, height, videoID)
+
+        return [nodes.raw('', html_code, format='html')]
+
+directives.register_directive('shellcast', ShellCast)
+directives.register_directive('shcast', ShellCast)
+directives.register_directive('script', ShellCast)

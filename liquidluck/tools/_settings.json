@@ -24,7 +24,7 @@
 
   "reader": {
     "active": [
-      "liquidluck.readers.markdown.MarkdownReader"
+      "liquidluck.readers.restructuredtext.RestructuredTextReader"
     ],
     "vars": {}
   },

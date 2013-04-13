@@ -2,7 +2,6 @@
 
 clean: clean-build clean-pyc
 
-
 clean-build:
 	rm -fr deploy/
 	rm -fr build/
